@@ -1,0 +1,1202 @@
+{
+	"containerName" : "ent-mfa",
+	"containerVersion" : "1.0.1",
+	"elementType" : "rule-set",
+	"elements" : [{
+			"ruleSetType" : "rt-score",
+			"elementType" : "RULE_SET",
+			"id" : "rs-rscore",
+			"name" : "Set: Risk Score",
+			"desc" : "This is a set of risk score rules.",
+			"status" : "ACTIVE",
+			"priority" : 10,
+			"properties" : {},
+			"logAttributes" : [],
+			"rules" : [{
+					"rules" : [{
+							"evaluationStatement" : {
+								"id" : "es-rscore-test",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "OR",
+								"conditions" : [{
+										"operator" : "op-decimal-gt",
+										"operands" : ["inlv: 1", "inlv: 2"],
+										"id" : "1",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}, {
+										"operator" : "op-decimal-gt",
+										"operands" : ["inlv: 11", "inlv: 12"],
+										"id" : "11",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}, {
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-decimal-gt",
+												"operands" : ["inlv: 2", "inlv: 3"],
+												"id" : "2.1",
+												"invert" : true,
+												"conditionType" : "CONDITION"
+											}, {
+												"operator" : "op-decimal-gt",
+												"operands" : ["inlv: 3", "inlv: 4"],
+												"id" : "2.2",
+												"invert" : true,
+												"conditionType" : "CONDITION"
+											}, {
+												"logicalOperator" : "OR",
+												"conditions" : [{
+														"operator" : "op-decimal-gt",
+														"operands" : ["inlv: 4", "inlv: 5"],
+														"id" : "2.3.1",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}, {
+														"operator" : "op-decimal-gt",
+														"operands" : ["inlv: 5", "inlv: 6"],
+														"id" : "2.3.2",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}
+												],
+												"id" : "2.3",
+												"invert" : false,
+												"conditionType" : "GROUP"
+											}
+										],
+										"id" : "2",
+										"invert" : false,
+										"conditionType" : "GROUP"
+									}, {
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-decimal-gt",
+												"operands" : ["inlv:6", "inlv: 7"],
+												"id" : "3.1",
+												"invert" : true,
+												"conditionType" : "CONDITION"
+											}, {
+												"operator" : "op-decimal-gt",
+												"operands" : ["inlv: 7", "inlv: 8"],
+												"id" : "3.2",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										],
+										"id" : "3",
+										"invert" : false,
+										"conditionType" : "GROUP"
+									}, {
+										"operator" : "op-decimal-gt",
+										"operands" : ["inlv: 8", "inlv: 9"],
+										"id" : "4",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-test",
+							"name" : "Risk Score: Test Rule",
+							"desc" : "This is a test rule",
+							"status" : "ACTIVE",
+							"priority" : 1,
+							"properties" : {
+								"score" : "0"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-high-risk-country",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-collection-contains",
+										"operands" : ["ch-high-risk-country-list", "r-ip-country"],
+										"id" : "cn-es-rscore-high-risk-country",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-hr-country",
+							"name" : "Risk Score: High Risk Country",
+							"desc" : "This rule checks if user's country is part of high risk country list then increase the score..",
+							"status" : "ACTIVE",
+							"priority" : 10,
+							"properties" : {
+								"score" : "200"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-no-country",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-null-empty-check",
+										"operands" : ["r-ip-country"],
+										"id" : "cn-es-rscore-no-country",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-no-country",
+							"name" : "Risk Score: No Country",
+							"desc" : "This rule checks if request IP country is null/empty then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 15,
+							"properties" : {
+								"score" : "0"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-hosting-provider",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["inlv: true", "r-ip-hp"],
+										"id" : "cn-es-rscore-hosting-provider",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-aip-hp",
+							"name" : "Risk Score: Hosting Provider",
+							"desc" : "This rule checks if request IP is Hosting Provider then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 20,
+							"properties" : {
+								"score" : "200"
+							},
+							"logAttributes" : []
+						}
+					],
+					"elementType" : "RULE_SUB_SET",
+					"id" : "ss-rscore-generic",
+					"name" : "Subset: Generic Risk Score",
+					"desc" : "This is a sub set for Generic Risk score rules.",
+					"status" : "ACTIVE",
+					"priority" : 10,
+					"properties" : {},
+					"logAttributes" : []
+				}, {
+					"rules" : [{
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-ip",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["rip-count-vrp", "inlv: 0"],
+										"id" : "cn-es-score-web-ip-contains",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-ip",
+							"name" : "Risk Score: Web - IP",
+							"desc" : "This rule checks if channel is Web and user IP Address does not match with list of verified IP Address from risk profile then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 10,
+							"properties" : {
+								"score" : "50"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-isp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["risp-count-vrp", "inlv: 0"],
+										"id" : "cn-es-score-web-isp-contains",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-isp",
+							"name" : "Risk Score: Web - ISP",
+							"desc" : "This rule checks if channel is Web and user IP ISP does not match with list of verified IP ISP from risk profile then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 15,
+							"properties" : {
+								"score" : "10"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-location",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["rloc-count-vrp", "inlv: 0"],
+										"id" : "cn-es-rscore-web-location-count",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-location",
+							"name" : "Risk Score: Web - Location Match",
+							"desc" : "This rule checks if channel is Web and user location (Country+State) does not match with the verified profile location then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 20,
+							"properties" : {
+								"score" : "150"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-device-fp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-gt-or-eq",
+										"operands" : ["dm-penalty", "dm-penalty-threshold"],
+										"id" : "cn-es-rscore-web-device-fp-pen-thrsld",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-device-fp",
+							"name" : "Risk Score: Web - Device Fingerprint",
+							"desc" : "This rule checks if channel is Web and device fingerprint penalty points exceeds the threshold then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 30,
+							"properties" : {
+								"score" : "250"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-fr-device-fp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-gt-or-eq",
+										"operands" : ["fr-dm-penalty", "dm-penalty-threshold"],
+										"id" : "cn-es-rscore-web-fr-device-fp-pen-thrsld",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-fr-device-fp",
+							"name" : "Risk Score: Web - FR Device Fingerprint",
+							"desc" : "This rule checks if channel is Web and device fingerprint penalty points exceeds the threshold then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 31,
+							"properties" : {
+								"score" : "0"
+							},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-rscore-web-fr-device-fp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-null-empty-check",
+										"operands" : ["fr-dm-penalty"],
+										"id" : "cn-as-rscore-web-fr-device-fp",
+										"invert" : true,
+										"conditionType" : "CONDITION"
+									}
+								]
+							}
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-device-cookie",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["rdv-ck-count-vrp", "inlv: 0"],
+										"id" : "cn-es-rscore-web-device-cookie-count",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-device-cookie",
+							"name" : "Risk Score: Web - Device Cookie",
+							"desc" : "This rule checks if channel is Web and device cookie does not match with list of verified device cookie from risk profile then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 40,
+							"properties" : {
+								"score" : "10"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-web-dc-fp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-gt",
+										"operands" : ["rdv-ck-count-vrp", "inlv: 0"],
+										"id" : "cn-es-rscore-web-dc-count",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}, {
+										"operator" : "op-decimal-gt",
+										"operands" : ["dm-penalty", "dm-penalty-threshold"],
+										"id" : "cn-es-rscore-web-df-pen-thrsld",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-web-dc-fp",
+							"name" : "Risk Score: Web - Same Device - New Fingerprint",
+							"desc" : "This rule checks if channel is Web and device cookie and fingerprint does not match with list of verified data from risk profile then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 100,
+							"properties" : {
+								"score" : "0"
+							},
+							"logAttributes" : []
+						}
+					],
+					"elementType" : "RULE_SUB_SET",
+					"id" : "ss-rscore-web",
+					"name" : "Subset: Web - Risk Score",
+					"desc" : "This is a sub set for Web Risk score rules.",
+					"status" : "ACTIVE",
+					"priority" : 20,
+					"properties" : {},
+					"logAttributes" : [],
+					"applyStatement" : {
+						"id" : "as-ss-rscore-web",
+						"invert" : false,
+						"conditionType" : "STATEMENT",
+						"logicalOperator" : "AND",
+						"conditions" : [{
+								"operator" : "op-string-eq-ic",
+								"operands" : ["channel-web", "r-channel"],
+								"id" : "cn-as-ss-rscore-web",
+								"invert" : false,
+								"conditionType" : "CONDITION"
+							}
+						]
+					}
+				}, {
+					"rules" : [{
+							"evaluationStatement" : {
+								"id" : "es-rscore-mobile-ip",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["rip-count-vrp", "inlv: 0"],
+										"id" : "cn-es-rscore-mobile-ip-count",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-mobile-ip",
+							"name" : "Risk Score: Mobile - IP",
+							"desc" : "This rule checks if user's IP Address does not match with list of verified IP Address from risk profile then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 10,
+							"properties" : {
+								"score" : "50"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-mobile-isp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["risp-count-vrp", "inlv: 0"],
+										"id" : "cn-es-rscore-mobile-isp-contains",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-mobile-isp",
+							"name" : "Risk Score: Mobile - ISP",
+							"desc" : "This rule checks if user's ISP does not match with list of verified ISP from risk profile then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 15,
+							"properties" : {
+								"score" : "10"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-mobile-location",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["rloc-count-vrp", "inlv: 0"],
+										"id" : "cn-es-rscore-mobile-location-count",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-mobile-location",
+							"name" : "Risk Score: Mobile - Location Match",
+							"desc" : "This rule checks if user location (Country + State) does not match with the verified profile location then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 20,
+							"properties" : {
+								"score" : "150"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-udi",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-lt-or-eq",
+										"operands" : ["rudi-count-vdv", "inlv: 0"],
+										"id" : "cn-es-rscore-mobile-udi-count",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-udi",
+							"name" : "Risk Score: Mobile - Universal Device Identifier",
+							"desc" : "This rule checks if request universal device id does not match with the verified device then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 30,
+							"properties" : {
+								"score" : "250"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-rscore-mob-device-fp",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-gt-or-eq",
+										"operands" : ["dm-penalty", "dm-penalty-threshold"],
+										"id" : "cn-es-rscore-mob-device-fp-pen-thrsld",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-rscore-mob-device-fp",
+							"name" : "Risk Score: Mobile - Device Fingerprint",
+							"desc" : "This rule checks if channel is Mobile and device fingerprint penalty points exceeds the threshold then increase the score.",
+							"status" : "ACTIVE",
+							"priority" : 40,
+							"properties" : {
+								"score" : "100"
+							},
+							"logAttributes" : []
+						}
+					],
+					"elementType" : "RULE_SUB_SET",
+					"id" : "ss-rscore-mobile",
+					"name" : "Subset: Mobile - Risk Score",
+					"desc" : "This is a sub set for Mobile Risk score rules.",
+					"status" : "ACTIVE",
+					"priority" : 30,
+					"properties" : {},
+					"logAttributes" : [],
+					"applyStatement" : {
+						"id" : "as-ss-rscore-mobile",
+						"invert" : false,
+						"conditionType" : "STATEMENT",
+						"logicalOperator" : "AND",
+						"conditions" : [{
+								"operator" : "op-string-eq-ic",
+								"operands" : ["channel-mobile", "r-channel"],
+								"id" : "cn-as-ss-rscore-mobile",
+								"invert" : false,
+								"conditionType" : "CONDITION"
+							}
+						]
+					}
+				}
+			]
+		}, {
+			"ruleSetType" : "rt-status",
+			"elementType" : "RULE_SET",
+			"id" : "rs-rassess",
+			"name" : "Set: Risk Assessment",
+			"desc" : "This is a set of risk assessment rules.",
+			"status" : "ACTIVE",
+			"priority" : 20,
+			"properties" : {},
+			"logAttributes" : [],
+			"rules" : [{
+					"rules" : [{
+							"evaluationStatement" : {
+								"id" : "es-aml-country-decline",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-collection-contains",
+										"operands" : ["aml-decline-country-list", "r-ip-country"],
+										"id" : "cn-es-aml-country-decline",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-dcl-aml",
+							"name" : "Decline: AML Country",
+							"desc" : "This rule blocks AML country user",
+							"status" : "ACTIVE",
+							"priority" : 5,
+							"properties" : {
+								"status" : "DECLINE"
+							},
+							"logAttributes" : []
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-non-us-decline",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["inlv: US", "r-ip-country"],
+										"id" : "cn-es-non-us-decline",
+										"invert" : true,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-dcl-non-us",
+							"name" : "Decline: Non US",
+							"desc" : "This rule gives DECLINE if user's country is not US for the configured event in the apply statement.",
+							"status" : "ACTIVE",
+							"priority" : 20,
+							"properties" : {
+								"status" : "DECLINE"
+							},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-non-us-decline",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "OR",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["event-activate-card", "r-event"],
+										"id" : "cn-as-event-act-card",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}, {
+										"operator" : "op-string-eq-ic",
+										"operands" : ["event-remote-dep", "r-event"],
+										"id" : "cn-as-event-remote-deposit",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							}
+						}, {
+							"rules" : [{
+									"evaluationStatement" : {
+										"id" : "es-push-auth-elv-sec",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-string-eq-ic",
+												"operands" : ["event-push-auth", "r-event"],
+												"id" : "cn-es-push-auth-elv-sec",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-elsc-push-auth",
+									"name" : "Elevate Security: Push Auth",
+									"desc" : "This rule returns ELEVATE_SECURITY if user's event is PUSHAUTH.",
+									"status" : "ACTIVE",
+									"priority" : 10,
+									"properties" : {
+										"status" : "ELEVATE_SECURITY"
+									},
+									"logAttributes" : []
+								}
+							],
+							"elementType" : "RULE_SUB_SET",
+							"id" : "ss-rassess-push-auth",
+							"name" : "Subset: Push Auth",
+							"desc" : "This is a sub set for Push Auth Global assessment.",
+							"status" : "ACTIVE",
+							"priority" : 30,
+							"properties" : {},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-ss-rassess-push-auth",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["event-push-auth", "r-event"],
+										"id" : "cn-as-ss-rassess-push-auth",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							}
+						}, {
+							"rules" : [{
+									"evaluationStatement" : {
+										"id" : "es-ssoid-chl",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-collection-contains",
+												"operands" : ["ch-ssoid-challenge-list", "r-ssoid"],
+												"id" : "cn-chl-ssoid-list",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-chl-ssoid",
+									"name" : "Challenge: SSOID",
+									"desc" : "This rule gives challenge if user ssoid is part of SSOID Challenge list",
+									"status" : "ACTIVE",
+									"priority" : 10,
+									"properties" : {
+										"status" : "CHALLENGE"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-chl-ssoid",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"logicalOperator" : "OR",
+												"conditions" : [{
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-login", "r-event"],
+														"id" : "cn-chl-ssoid-lg",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}, {
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-fp", "r-event"],
+														"id" : "cn-chl-ssoid-fp",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}
+												],
+												"id" : "gr-chl-ssoid-event",
+												"invert" : false,
+												"conditionType" : "GROUP"
+											}
+										]
+									}
+								}, {
+									"evaluationStatement" : {
+										"id" : "es-chl-ip",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-collection-contains",
+												"operands" : ["ch-ip-challenge-list", "r-ip"],
+												"id" : "cn-chl-ip-list",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-chl-ip",
+									"name" : "Challenge: IP",
+									"desc" : "This rule gives CHALLENGE if user's IP is part of IP Challenge list.",
+									"status" : "ACTIVE",
+									"priority" : 20,
+									"properties" : {
+										"status" : "CHALLENGE"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-chl-ip",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"logicalOperator" : "OR",
+												"conditions" : [{
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-login", "r-event"],
+														"id" : "cn-chl-ip-lg",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}, {
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-fp", "r-event"],
+														"id" : "cn-chl-ip-fp",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}
+												],
+												"id" : "gr-chl-ip-event",
+												"invert" : false,
+												"conditionType" : "GROUP"
+											}
+										]
+									}
+								}, {
+									"evaluationStatement" : {
+										"id" : "es-alw-ssoid",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-collection-contains",
+												"operands" : ["ch-white-ssoid-list", "r-ssoid"],
+												"id" : "cn-ssoid-white-list",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-alw-ssoid",
+									"name" : "Allow: SSOID",
+									"desc" : "This rule gives ALLOW if user ssoid is part of SSOID White list.",
+									"status" : "ACTIVE",
+									"priority" : 30,
+									"properties" : {
+										"status" : "ALLOW"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-alw-ssoid",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"logicalOperator" : "OR",
+												"conditions" : [{
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-login", "r-event"],
+														"id" : "cn-alw-ssoid-lg",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}
+												],
+												"id" : "gr-alw-ssoid-event",
+												"invert" : false,
+												"conditionType" : "GROUP"
+											}
+										]
+									}
+								}, {
+									"evaluationStatement" : {
+										"id" : "es-alw-ip",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-collection-contains",
+												"operands" : ["ch-white-ip-list", "r-ip"],
+												"id" : "cn-alw-ip-list",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-alw-ip",
+									"name" : "Allow: IP",
+									"desc" : "This rule gives ALLOW if user's IP is part of IP White list.",
+									"status" : "ACTIVE",
+									"priority" : 40,
+									"properties" : {
+										"status" : "ALLOW"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-alw-ip",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"logicalOperator" : "OR",
+												"conditions" : [{
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-login", "r-event"],
+														"id" : "cn-alw-ip-lg",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}
+												],
+												"id" : "gr-alw-ip-event",
+												"invert" : false,
+												"conditionType" : "GROUP"
+											}
+										]
+									}
+								}, {
+									"evaluationStatement" : {
+										"id" : "es-chl-anon-ip",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"operator" : "op-string-eq-ic",
+												"operands" : ["inlv: true", "r-ip-vpn"],
+												"id" : "cn-anon-vpn",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}, {
+												"operator" : "op-string-eq-ic",
+												"operands" : ["inlv: true", "r-ip-tor"],
+												"id" : "cn-anon-tor",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}, {
+												"operator" : "op-string-eq-ic",
+												"operands" : ["inlv: true", "r-ip-pp"],
+												"id" : "cn-anon-pp",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-chl-anon-ip",
+									"name" : "Challenge: Anonymous IP",
+									"desc" : "This rule returns CHALLENGE if user's IP is Anonymous VPN, TOR or PP (Public Proxy).",
+									"status" : "ACTIVE",
+									"priority" : 50,
+									"properties" : {
+										"status" : "CHALLENGE"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-chl-anon-ip",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"logicalOperator" : "OR",
+												"conditions" : [{
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-login", "r-event"],
+														"id" : "cn-chl-anon-ip-lg",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}, {
+														"operator" : "op-string-eq-ic",
+														"operands" : ["event-fp", "r-event"],
+														"id" : "cn-chl-anon-ip-fp",
+														"invert" : false,
+														"conditionType" : "CONDITION"
+													}
+												],
+												"id" : "gr-chl-anon-ip-event",
+												"invert" : false,
+												"conditionType" : "GROUP"
+											}
+										]
+									}
+								}, {
+									"evaluationStatement" : {
+										"id" : "es-dcl-ssoid",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-collection-contains",
+												"operands" : ["ch-ssoid-decline-list", "r-ssoid"],
+												"id" : "cn-es-dcl-ssoid-list",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-dcl-ssoid",
+									"name" : "Decline: SSOID",
+									"desc" : "This rule gives decline if user ssoid is part of SSOID Decline list",
+									"status" : "ACTIVE",
+									"priority" : 900,
+									"properties" : {
+										"status" : "DECLINE"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-dcl-ssoid",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-string-eq-ic",
+												"operands" : ["event-login", "r-event"],
+												"id" : "cn-as-dcl-ssoid-login",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									}
+								}
+							],
+							"elementType" : "RULE_SUB_SET",
+							"id" : "ss-rassess-glb-select",
+							"name" : "Subset: Global Select Check",
+							"desc" : "Global Select Check (Challenge List (SSOID, IP), White List(SSOID, IP), Anonymouse IP) assessment.",
+							"status" : "ACTIVE",
+							"priority" : 50,
+							"properties" : {},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-rassess-gl-select",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "OR",
+								"conditions" : [{
+										"logicalOperator" : "OR",
+										"conditions" : [{
+												"operator" : "op-string-eq-ic",
+												"operands" : ["event-login", "r-event"],
+												"id" : "cn-rassess-gl-select-lg",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}, {
+												"operator" : "op-string-eq-ic",
+												"operands" : ["event-fp", "r-event"],
+												"id" : "cn-rassess-gl-select-fp",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										],
+										"id" : "gr-rassess-gl-select-event",
+										"invert" : false,
+										"conditionType" : "GROUP"
+									}
+								]
+							}
+						}
+					],
+					"elementType" : "RULE_SUB_SET",
+					"id" : "ss-rassess-glb",
+					"name" : "Subset: Global Assessment",
+					"desc" : "This is a sub set for Generic Risk score rules.",
+					"status" : "ACTIVE",
+					"priority" : 10,
+					"properties" : {},
+					"logAttributes" : []
+				}, {
+					"rules" : [{
+							"rules" : [{
+									"evaluationStatement" : {
+										"id" : "es-chl-mob-rscore",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-decimal-gt-or-eq",
+												"operands" : ["risk-score", "inlv: 300"],
+												"id" : "cn-chl-mob-rscore-threshold",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									},
+									"elementType" : "RULE",
+									"id" : "rl-chl-mob-rscore",
+									"name" : "Challenge: Mobile, Login - Risk Score",
+									"desc" : "This rule gives challenge if user risk score is greater than the risk score threshold for the Mobile channel.",
+									"status" : "ACTIVE",
+									"priority" : 10,
+									"properties" : {
+										"status" : "CHALLENGE"
+									},
+									"logAttributes" : [],
+									"applyStatement" : {
+										"id" : "as-chl-mob-rscore",
+										"invert" : false,
+										"conditionType" : "STATEMENT",
+										"logicalOperator" : "AND",
+										"conditions" : [{
+												"operator" : "op-string-eq-ic",
+												"operands" : ["event-login", "r-event"],
+												"id" : "cn-chl-mob-rscore-login",
+												"invert" : false,
+												"conditionType" : "CONDITION"
+											}
+										]
+									}
+								}
+							],
+							"elementType" : "RULE_SUB_SET",
+							"id" : "ss-rassess-auth-mobile",
+							"name" : "Subset: Authentication Assessment Mobile",
+							"desc" : "This is a sub set for Mobile assessment.",
+							"status" : "ACTIVE",
+							"priority" : 10,
+							"properties" : {},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-ss-rassess-auth-mobile",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["channel-mobile", "r-channel"],
+										"id" : "cn-as-ss-rscore-mobile",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							}
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-chl-lg-rscore",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-gt-or-eq",
+										"operands" : ["risk-score", "inlv: 300"],
+										"id" : "cn-chl-lg-rscore-threshold",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-chl-lg-rscore",
+							"name" : "Challenge: Login - Risk Score",
+							"desc" : "This rule gives challenge if user risk score is greater than the risk score threshold.",
+							"status" : "ACTIVE",
+							"priority" : 20,
+							"properties" : {
+								"status" : "CHALLENGE"
+							},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-chl-lg-rscore",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["event-login", "r-event"],
+										"id" : "cn-as-chl-lg-rscore-login",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							}
+						}, {
+							"evaluationStatement" : {
+								"id" : "es-chl-fp-rscore",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-decimal-gt-or-eq",
+										"operands" : ["risk-score", "inlv: 300"],
+										"id" : "cn-chl-fp-rscore-threshold",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							},
+							"elementType" : "RULE",
+							"id" : "rl-chl-fp-rscore",
+							"name" : "Challenge: FP - Risk Score",
+							"desc" : "This rule gives challenge if user risk score is greater than the risk score threshold.",
+							"status" : "ACTIVE",
+							"priority" : 30,
+							"properties" : {
+								"status" : "CHALLENGE"
+							},
+							"logAttributes" : [],
+							"applyStatement" : {
+								"id" : "as-chl-fp-rscore",
+								"invert" : false,
+								"conditionType" : "STATEMENT",
+								"logicalOperator" : "AND",
+								"conditions" : [{
+										"operator" : "op-string-eq-ic",
+										"operands" : ["event-fp", "r-event"],
+										"id" : "cn-as-chl-fp-rscore-login",
+										"invert" : false,
+										"conditionType" : "CONDITION"
+									}
+								]
+							}
+						}
+					],
+					"elementType" : "RULE_SUB_SET",
+					"id" : "ss-rassess-auth",
+					"name" : "Subset: Authentication Assessment",
+					"desc" : "This is a sub set for Generic Risk score rules.",
+					"status" : "ACTIVE",
+					"priority" : 100,
+					"properties" : {},
+					"logAttributes" : []
+				}
+			]
+		}
+	]
+}

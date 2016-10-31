@@ -1,0 +1,35 @@
+{"containers": [
+      {
+      "id": "mfa-cons",
+      "name": "Consumer MFA",
+      "status": "ACTIVE",
+      "desc": "CapitalOne Consumer MFA rules.",
+      "versions": [      {
+         "version": "1.0.0",
+         "status": "ACTIVE",
+         "desc": "Imported."
+      }]
+   },
+      {
+      "id": "mfa-pshp",
+      "name": "Partnership MFA",
+      "status": "ACTIVE",
+      "desc": "CapitalOne Partnership MFA rules.",
+      "versions": [      {
+         "version": "1.0.0",
+         "status": "ACTIVE",
+         "desc": "Imported."
+      }]
+   },
+      {
+      "id": "mfa-comm",
+      "name": "Commercial MFA",
+      "status": "ACTIVE",
+      "desc": "CapitalOne Commercial MFA rules.",
+      "versions": [      {
+         "version": "1.0.0",
+         "status": "ACTIVE",
+         "desc": "Imported."
+      }]
+   }
+]}
